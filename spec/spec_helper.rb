@@ -9,6 +9,10 @@ require 'rspec/autorun'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+# Checks for pending migrations before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
 RSpec.configure do |config|
   config.include(EmailSpec::Helpers)
   config.include(EmailSpec::Matchers)
@@ -19,6 +23,7 @@ RSpec.configure do |config|
   # config.mock_with :mocha
   # config.mock_with :flexmock
   # config.mock_with :rr
+  config.include FactoryGirl::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -38,7 +43,7 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
-  
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
   end

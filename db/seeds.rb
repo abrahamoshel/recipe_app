@@ -17,3 +17,10 @@ user = User.find_or_create_by_email :name => ENV['ADMIN_NAME'].dup, :email => EN
 puts 'user: ' << user.name
 user.confirm!
 user.add_role :admin
+
+recipe = Recipe.create(name: 'Chicken Soup', description: 'Tasty Soup')
+recipe.ingredients.build(name: "Chicken", quantity: 1.5, measurement: 'cup')
+recipe.directions.build(order: 1, instruction: 'Just Do It')
+recipe.directions.build(order: 2, instruction: 'Just Cook It')
+recipe.timings.build(kind: "PrepTime", quantity: 1, measurement: 'hr')
+recipe.save

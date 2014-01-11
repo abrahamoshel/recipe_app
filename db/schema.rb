@@ -11,10 +11,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140111031828) do
+ActiveRecord::Schema.define(version: 20140111044353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "directions", force: true do |t|
+    t.integer  "recipe_id"
+    t.integer  "order"
+    t.string   "instruction"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "directions", ["recipe_id"], name: "index_directions_on_recipe_id", using: :btree
+
+  create_table "ingredients", force: true do |t|
+    t.integer  "recipe_id"
+    t.string   "name"
+    t.string   "quantity"
+    t.string   "measurement"
+    t.integer  "substance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ingredients", ["recipe_id"], name: "index_ingredients_on_recipe_id", using: :btree
+  add_index "ingredients", ["substance_id"], name: "index_ingredients_on_substance_id", using: :btree
+
+  create_table "recipe_techniques", force: true do |t|
+    t.integer "recipe_id"
+    t.integer "technique_id"
+  end
+
+  add_index "recipe_techniques", ["recipe_id"], name: "index_recipe_techniques_on_recipe_id", using: :btree
+  add_index "recipe_techniques", ["technique_id"], name: "index_recipe_techniques_on_technique_id", using: :btree
+
+  create_table "recipes", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -26,6 +64,39 @@ ActiveRecord::Schema.define(version: 20140111031828) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
+
+  create_table "substances", force: true do |t|
+    t.text   "description"
+    t.string "name"
+    t.string "season"
+    t.text   "selection"
+    t.text   "storage"
+    t.text   "pairing"
+  end
+
+  create_table "substitutions", force: true do |t|
+    t.integer "substance_id"
+    t.integer "substitute_id"
+  end
+
+  add_index "substitutions", ["substance_id"], name: "index_substitutions_on_substance_id", using: :btree
+  add_index "substitutions", ["substitute_id"], name: "index_substitutions_on_substitute_id", using: :btree
+
+  create_table "techniques", force: true do |t|
+    t.string "name"
+    t.text   "description"
+  end
+
+  create_table "timings", force: true do |t|
+    t.integer  "recipe_id"
+    t.string   "kind"
+    t.string   "quantity"
+    t.string   "measurement"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "timings", ["recipe_id"], name: "index_timings_on_recipe_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
